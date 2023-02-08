@@ -1,23 +1,19 @@
 import { ConsumeMessage } from 'amqplib'
-import { rabbitMQ } from './rabbitmq'
-import { randomUUID } from 'crypto'
+import { generateCertificateService } from './infra/containers'
+import { RabbitMQ } from './queues/rabbitmq'
+import { startQueues } from './queues/queues'
+
 async function run() {
-    const rabbitmq = await rabbitMQ()
-    await rabbitmq.consume('generate_certificate', async (message: ConsumeMessage | null) => {
+    const rabbitmq = new RabbitMQ()
+    await startQueues(rabbitmq)
+    await rabbitmq.consumeQueue('generate_certificate', async (message: ConsumeMessage | null) => {
         if (!message) return
         const msg = JSON.parse(message.content.toString())
-        const certificate = {
-            certificate: randomUUID(),
-            ...msg
-        }
-        rabbitmq.ack(message)
+        const certificate = generateCertificateService.handler(msg)
+        rabbitmq.channel?.ack(message)
         rabbitmq.sendToQueue(
             'confirm_certificate',
-            Buffer.from(
-                JSON.stringify({
-                    ...certificate
-                })
-            )
+            JSON.stringify(certificate)
         )
     })
 }
