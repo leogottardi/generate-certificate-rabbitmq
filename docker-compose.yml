@@ -1,0 +1,32 @@
+version: '3.3'
+networks:
+  api:
+    driver: 'bridge'
+services:
+  postgres:
+    image: postgres:13
+    restart: always
+    container_name: api-postgres
+    ports:
+      - '5432:5432'
+    environment:
+      PGUSER: user
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      PGPASSWORD: password
+      POSTGRES_DB: api
+      PGDATABASE: api
+    networks:
+      - api
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    container_name: api-rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_VHOST: /
+    networks:
+      - api
