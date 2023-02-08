@@ -10,7 +10,9 @@ export async function consumeQueues(rabbitMQ: IRabbitMQ) {
     await rabbitMQ.bindQueue('confirm_certificate', 'api_exchange', 'confirm_certificate')
     await rabbitMQ.consumeQueue('confirm_certificate', (message: ConsumeMessage) => {
         if (!message) return
-        console.log(JSON.parse(message.content.toString()))
+        const parsedMessage = JSON.parse(message.content.toString())
+        console.log("Certificate generated!")
+        console.log({ certificate: parsedMessage })
         rabbitMQ.channel?.ack(message)
     })
 }
