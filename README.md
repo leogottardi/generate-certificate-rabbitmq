@@ -23,6 +23,8 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias :
 - [Node.js](https://nodejs.dev/)
 - [Express](https://expressjs.com/pt-br/)
 - [RabbitMQ](https://www.rabbitmq.com/)
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://github.com/docker/compose)
 
 ---
 
@@ -41,6 +43,9 @@ Para utilizar a api você deve simular com [Postman](https://www.postman.com/), 
 ```bash
     #Clonar o repositório
     $ git clone https://github.com/leogottardi/generate-certificate-rabbitmq.git
+
+    #Inicie o container do rabbitmq
+    $ docker-compose up
 
     #Entrar no diretório da api
     $ cd api
