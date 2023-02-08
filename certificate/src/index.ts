@@ -9,6 +9,7 @@ async function run() {
     await rabbitmq.consumeQueue('generate_certificate', async (message: ConsumeMessage | null) => {
         if (!message) return
         const msg = JSON.parse(message.content.toString())
+        console.log("Received message: ", { ...msg })
         const certificate = generateCertificateService.handler(msg)
         rabbitmq.channel?.ack(message)
         rabbitmq.sendToQueue(
@@ -16,6 +17,7 @@ async function run() {
             JSON.stringify(certificate)
         )
     })
+    console.log("Service on!")
 }
 
 run()
